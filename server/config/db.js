@@ -12,7 +12,7 @@ const pool = mysql.createPool({
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
-  multipleStatements: true, // Enable multiple sql query statements
+  multipleStatements: true, 
 });
 
 // Test the connection and log the result
