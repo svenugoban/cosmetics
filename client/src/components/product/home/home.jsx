@@ -4,11 +4,13 @@ import { DataGrid } from "@mui/x-data-grid"; // Import only the DataGrid compone
 import "./home.css";
 import { Box, IconButton, Typography, Menu, MenuItem, Button, Grid } from "@mui/material";
 import { Visibility, Edit, Delete, MoreVert } from "@mui/icons-material";
-import CreateEditDialog from "../../common/create-edit-dialog";
-import ProductForm from "../form/product";
-import ReusableDialog from "../../common/dialog";
+import CreateEditDialog from "../../../common/create-edit-dialog";
+import ProductForm from "../product-form";
+import ReusableDialog from "../../../common/dialog";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const navigate = useNavigate(); // Initialize useNavigate
   const [page, setPage] = useState(0); // Zero-based page index
   const [pageSize, setPageSize] = useState(10); // Default rows per page
   const [products, setProducts] = useState([]);
@@ -85,6 +87,7 @@ const Home = () => {
   };
 
   const handleView = () => {
+    navigate(`/products/${selectedProduct.id}`); // Navigate to the product detail page
     handleMenuClose();
   };
 
