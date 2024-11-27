@@ -185,11 +185,11 @@ const Home = () => {
             category: "",
             description: "",
             usages: "",
-            image_url: "",
+            image: "",
           }}
           onSubmit={async (values) => {
             await axios.post("/api/products/cosmetic", values, {
-              headers: { "Content-Type": "application/json" },
+              headers: { "Content-Type": "multipart/form-data" },
             });
           }}
           onClose={() => {
@@ -198,7 +198,7 @@ const Home = () => {
           }}
         />
       </CreateEditDialog>
-      <CreateEditDialog isOpen={editOpen} title='Edit Task'>
+      <CreateEditDialog isOpen={editOpen} title='Edit Cosmetic'>
         <Box>
           <ProductForm
             enableReinitialize={true}
@@ -208,12 +208,12 @@ const Home = () => {
               category: selectedProduct?.category,
               description: selectedProduct?.description,
               usages: selectedProduct?.usages,
-              image_url: selectedProduct?.image_url,
+              image: null, // Image should be handled separately, so no initial value
             }}
             onSubmit={async (values) => {
               try {
                 await axios.put(`/api/products/cosmetic/${selectedProduct?.id}`, values, {
-                  headers: { "Content-Type": "application/json" },
+                  headers: { "Content-Type": "multipart/form-data" },
                 });
                 fetchProducts(); // Refresh the cosmetic list
                 setEditOpen(false); // Close the dialog

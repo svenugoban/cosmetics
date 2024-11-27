@@ -10,16 +10,21 @@ const ProductForm = ({ initialValues, onSubmit, onClose }) => {
     <Formik
       initialValues={initialValues}
       onSubmit={(values, { setSubmitting }) => {
-        const payload = {
-          name: values.name,
-          price: parseFloat(values.price),
-          category: values.category,
-          description: values.description,
-          usages: values.usages,
-          image_url: values.image_url,
-        };
+        const formData = new FormData();
+        formData.append("name", values.name);
+        formData.append("price", values.price);
+        formData.append("category", values.category);
+        formData.append("description", values.description);
+        formData.append("usages", values.usages);
 
-        onSubmit(payload)
+        // Log values to verify the data before appending to FormData
+        console.log("Formik Values:", values);
+
+        if (values.image) {
+          formData.append("image", values.image); // Appending the file if selected
+        }
+
+        onSubmit(formData)
           .then(() => {
             onClose(); // Close dialog on success
           })
@@ -31,7 +36,7 @@ const ProductForm = ({ initialValues, onSubmit, onClose }) => {
           });
       }}
     >
-      {({ values, handleChange, handleBlur }) => (
+      {({ values, handleChange, handleBlur, setFieldValue }) => (
         <Form id='productForm'>
           {/* Product Name */}
           <Typography sx={{ fontSize: "14px", color: "black" }} align='left'>
@@ -60,8 +65,8 @@ const ProductForm = ({ initialValues, onSubmit, onClose }) => {
             value={values.price}
             onChange={handleChange}
             onBlur={handleBlur}
-            type='number'
             sx={{ mt: 1 }}
+            type="number"
           />
 
           {/* Category */}
@@ -72,12 +77,8 @@ const ProductForm = ({ initialValues, onSubmit, onClose }) => {
             id='category'
             options={categories}
             value={values.category}
-            onChange={(event, newValue) => handleChange({ target: { name: "category", value: newValue } })}
-            renderInput={(params) => (
-              <>
-                <TextField {...params} placeholder='Select category' />
-              </>
-            )}
+            onChange={(event, newValue) => setFieldValue("category", newValue)} // Use setFieldValue for Autocomplete
+            renderInput={(params) => <TextField {...params} placeholder='Select category' />}
             fullWidth
           />
 
@@ -113,19 +114,19 @@ const ProductForm = ({ initialValues, onSubmit, onClose }) => {
             sx={{ mt: 1 }}
           />
 
-          {/* Image URL */}
+          {/* Image Upload */}
           <Typography sx={{ fontSize: "14px", color: "black", mt: 2 }} align='left'>
-            Image URL
+            Product Image
           </Typography>
-          <TextField
-            name='image_url'
-            fullWidth
-            variant='outlined'
-            placeholder='Enter image URL'
-            value={values.image_url}
-            onChange={handleChange}
+          <input
+            type='file'
+            name='image'
+            accept='image/*'
+            onChange={(event) => {
+              setFieldValue("image", event.target.files[0]); // Using setFieldValue to update Formik state
+            }}
             onBlur={handleBlur}
-            sx={{ mt: 1 }}
+            style={{ marginTop: 8 }}
           />
 
           {/* Submit and Cancel buttons */}
