@@ -37,11 +37,7 @@ const ProductDetail = () => {
           {/* Left Side: Product Image */}
           <Grid item xs={12} md={6}>
             <Paper elevation={3} sx={{ padding: 2, display: "flex", justifyContent: "center" }}>
-              <img
-                src={product.image_url}
-                alt={product.name}
-                style={{ width: "100%", maxWidth: "300px", objectFit: "cover" }}
-              />
+              <img src={product.image_url} alt={product.name} style={{ maxWidth: "250px", objectFit: "cover" }} />
             </Paper>
           </Grid>
 
