@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { DataGrid } from "@mui/x-data-grid"; // Import only the DataGrid component
 import "./home.css";
+import { Box, Typography } from "@mui/material";
 
 const Home = () => {
   const [page, setPage] = useState(0); // Zero-based page index
@@ -17,9 +18,9 @@ const Home = () => {
       setError(null);
 
       try {
-        const response = await axios.get("/api/products/cosmeticAll");
+        const response = await axios.get(`/api/products/cosmeticAll?page=${page + 1}&limit=${pageSize}`);
         setProducts(response.data);
-        setTotalProducts(response.data.total);
+        setTotalProducts(response.data.length);
       } catch (err) {
         setError("Error fetching products. Please try again.");
       } finally {
@@ -33,7 +34,7 @@ const Home = () => {
   const columns = [
     {
       field: "image_url",
-      headerName: "Image",
+      headerName: "Product Image",
       renderCell: (params) => (
         <img
           src={params.value}
@@ -45,18 +46,20 @@ const Home = () => {
       sortable: false,
       flex: 0.5,
     },
-    { field: "name", headerName: "Name", flex: 1 },
-    { field: "price", headerName: "Price ($)", flex: 0.5 },
-    { field: "category", headerName: "Category", flex: 1 },
+    { field: "name", headerName: "Product Name", flex: 1 },
+    { field: "price", headerName: "Product Price ($)", flex: 0.5 },
+    { field: "category", headerName: "Product Category", flex: 1 },
   ];
 
   if (loading) return <div>Loading products...</div>;
   if (error) return <div>{error}</div>;
 
   return (
-    <div className='container mx-auto p-6'>
-      <h1 className='text-2xl font-bold mb-4 text-center'>Cosmetic Products</h1>
-      <div className='bg-white p-4 rounded shadow'>
+    <Box className='container mx-auto p-6'>
+      <Typography sx={{ fontWeight: "bold", fontSize: "22px", color: "black" }} align='left' mb={1}>
+        Cosmetic Products
+      </Typography>
+      <Box className='bg-white p-4 rounded shadow'>
         <DataGrid
           rows={products}
           columns={columns}
@@ -70,8 +73,8 @@ const Home = () => {
           autoHeight
           loading={loading} // Show loader on API call
         />
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 
