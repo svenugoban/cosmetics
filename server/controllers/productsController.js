@@ -38,24 +38,24 @@ const getProductById = async (req, res) => {
 
 const createProduct = async (req, res) => {
   try {
-    const { name, price, category, description, usages, image_url } = req.body;
+    const { name, price, category, description, usages } = req.body;
+
+    // Check if a file was uploaded
+    const imageUrl = req.file ? `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}` : null;
 
     // Validate required fields
     if (!name || typeof name !== "string") {
       return res.status(400).json({ error: "Name is required and must be a string" });
     }
 
-    if (!price || typeof price !== "number") {
-      return res.status(400).json({ error: "Price is required and must be a number" });
-    }
-
+    // Create the product
     const newProduct = await Product.create({
       name,
       price,
       category,
       description,
       usages,
-      image_url,
+      image_url: imageUrl,
     });
 
     res.status(201).json({
@@ -71,30 +71,32 @@ const createProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, price, category, description, usages, image_url } = req.body;
+    const { name, price, category, description, usages } = req.body;
 
     // Validate ID
     if (!id) {
       return res.status(400).json({ error: "ID parameter is required" });
     }
 
+    // Check if a file was uploaded
+    const imageUrl = req.file ? `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}` : undefined; // Undefined to ignore if no file was uploaded
+
     // Validate fields if provided
     if (name && typeof name !== "string") {
       return res.status(400).json({ error: "Name must be a string" });
     }
 
-    if (price && typeof price !== "number") {
-      return res.status(400).json({ error: "Price must be a number" });
-    }
-
-    const updatedProduct = await Product.update(id, {
+    // Update the product
+    const updatedFields = {
       name,
       price,
       category,
       description,
       usages,
-      image_url,
-    });
+      ...(imageUrl && { image_url: imageUrl }), // Only include image_url if a new file was uploaded
+    };
+
+    const updatedProduct = await Product.update(id, updatedFields);
 
     if (!updatedProduct) {
       return res.status(404).json({ error: "Product not found" });
