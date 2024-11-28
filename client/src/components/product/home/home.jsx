@@ -1,8 +1,22 @@
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
-import { DataGrid } from "@mui/x-data-grid"; // Import only the DataGrid component
 import "./home.css";
-import { Box, IconButton, Typography, Menu, MenuItem, Button, Grid } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  Typography,
+  Menu,
+  MenuItem,
+  Button,
+  Grid,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TablePagination,
+} from "@mui/material";
 import { Visibility, Edit, Delete, MoreVert } from "@mui/icons-material";
 import CreateEditDialog from "../../../common/create-edit-dialog";
 import ProductForm from "../product-form";
@@ -12,7 +26,7 @@ import { useNavigate } from "react-router-dom";
 const Home = () => {
   const navigate = useNavigate(); // Initialize useNavigate
   const [page, setPage] = useState(0); // Zero-based page index
-  const [pageSize, setPageSize] = useState(10); // Default rows per page
+  const [pageSize, setPageSize] = useState(5); // Default rows per page
   const [products, setProducts] = useState([]);
   const [totalProducts, setTotalProducts] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -42,40 +56,6 @@ const Home = () => {
   useEffect(() => {
     fetchProducts();
   }, [fetchProducts]);
-
-  // Columns with actions
-  const columns = [
-    {
-      field: "image_url",
-      headerName: "Product Image",
-      renderCell: (params) => (
-        <img
-          src={params.value}
-          alt={params.row.name}
-          className='product-image'
-          style={{ maxWidth: "100px", maxHeight: "80px", objectFit: "cover" }}
-        />
-      ),
-      sortable: false,
-      flex: 0.5,
-    },
-    { field: "name", headerName: "Product Name", flex: 1 },
-    { field: "price", headerName: "Product Price ($)", flex: 0.5 },
-    { field: "category", headerName: "Product Category", flex: 1 },
-    {
-      field: "actions",
-      headerName: "Actions",
-      sortable: false,
-      flex: 0.5,
-      renderCell: (params) => (
-        <Box display='flex' justifyContent='center' alignItems='center'>
-          <IconButton onClick={(e) => handleMenuOpen(e, params.row)}>
-            <MoreVert />
-          </IconButton>
-        </Box>
-      ),
-    },
-  ];
 
   const handleMenuOpen = (event, cosmetic) => {
     setMenuAnchorEl(event.currentTarget);
@@ -147,19 +127,84 @@ const Home = () => {
         </Grid>
       </Grid>
       <Box className='bg-white p-4 rounded shadow'>
-        <DataGrid
-          rows={products}
-          columns={columns}
-          pagination
-          paginationMode='server'
-          page={page}
-          pageSize={pageSize}
-          rowCount={totalProducts}
-          onPageChange={(newPage) => setPage(newPage)}
-          onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-          autoHeight
-          loading={loading} // Show loader on API call
-        />
+        {loading ? (
+          <Box display='flex' justifyContent='center' alignItems='center' mt={3}>
+            <Typography>Loading products...</Typography>
+          </Box>
+        ) : (
+          <Box>
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Product Image</TableCell>
+                    <TableCell>Product Name</TableCell>
+                    <TableCell>Product Price ($)</TableCell>
+                    <TableCell>Product Category</TableCell>
+                    <TableCell>Actions</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {products.length > 0 ? (
+                    products.map((product) => (
+                      <TableRow key={product.id}>
+                        <TableCell>
+                          <img
+                            src={product.image_url}
+                            alt={product.name}
+                            style={{ maxWidth: "100px", maxHeight: "80px", objectFit: "cover" }}
+                          />
+                        </TableCell>
+                        <TableCell>{product.name}</TableCell>
+                        <TableCell>{product.price}</TableCell>
+                        <TableCell>{product.category}</TableCell>
+                        <TableCell>
+                          <Box display='flex' justifyContent='center' alignItems='center'>
+                            <IconButton onClick={(e) => handleMenuOpen(e, product)}>
+                              <MoreVert />
+                            </IconButton>
+                            <Menu anchorEl={menuAnchorEl} open={Boolean(menuAnchorEl)} onClose={handleMenuClose}>
+                              <MenuItem onClick={handleView}>
+                                <Visibility fontSize='small' />
+                                <Typography sx={{ ml: 1 }}>View</Typography>
+                              </MenuItem>
+                              <MenuItem onClick={handleEdit}>
+                                <Edit fontSize='small' />
+                                <Typography sx={{ ml: 1 }}>Edit</Typography>
+                              </MenuItem>
+                              <MenuItem onClick={handleClickDelete}>
+                                <Delete fontSize='small' />
+                                <Typography sx={{ ml: 1 }}>Delete</Typography>
+                              </MenuItem>
+                            </Menu>
+                          </Box>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={5} align='center'>
+                        No products available.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component='div'
+              count={totalProducts}
+              rowsPerPage={pageSize}
+              page={page}
+              onPageChange={(event, newPage) => setPage(newPage)}
+              onRowsPerPageChange={(event) => {
+                setPageSize(parseInt(event.target.value, 10));
+                setPage(0); // Reset to the first page when the page size changes
+              }}
+            />
+          </Box>
+        )}
       </Box>
 
       {/* Menu for actions */}
