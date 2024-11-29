@@ -34,4 +34,8 @@ Runs the app in the development mode.
 ### Database 
 implemented by mysql
 
+### testing 
+run below comand
+### npm test
+
 ### need to add a .env file inside the server folder with your DB_PASSWORD, DATABASE name alone 
