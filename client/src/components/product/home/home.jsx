@@ -26,7 +26,7 @@ import { useNavigate } from "react-router-dom";
 const Home = () => {
   const navigate = useNavigate(); // Initialize useNavigate
   const [page, setPage] = useState(0); // Zero-based page index
-  const [pageSize, setPageSize] = useState(5); // Default rows per page
+  const [pageSize, setPageSize] = useState(10); // Default rows per page
   const [products, setProducts] = useState([]);
   const [totalProducts, setTotalProducts] = useState(0);
   const [loading, setLoading] = useState(false);

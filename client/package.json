@@ -9,11 +9,7 @@
     "@mui/icons-material": "^6.1.8",
     "@mui/material": "^6.1.8",
     "@mui/x-data-grid": "^7.22.3",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
     "autoprefixer": "^10.4.20",
-    "axios": "^1.7.8",
     "formik": "^2.4.6",
     "postcss": "^8.4.49",
     "react": "^18.3.1",
@@ -48,5 +44,17 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "@babel/preset-react": "^7.25.9",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.0.1",
+    "@testing-library/user-event": "^14.5.2",
+    "axios": "^1.7.8",
+    "babel-jest": "^29.7.0",
+    "jest": "^27.5.1",
+    "jest-mock": "^29.7.0"
   }
 }
