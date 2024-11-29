@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
-import "./home.css";
+import "./product-list.css";
 import {
   Box,
   IconButton,
@@ -23,7 +23,7 @@ import ProductForm from "../product-form";
 import ReusableDialog from "../../../common/dialog";
 import { useNavigate } from "react-router-dom";
 
-const Home = () => {
+const ProductList = () => {
   const navigate = useNavigate(); // Initialize useNavigate
   const [page, setPage] = useState(0); // Zero-based page index
   const [pageSize, setPageSize] = useState(10); // Default rows per page
@@ -289,4 +289,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default ProductList;
