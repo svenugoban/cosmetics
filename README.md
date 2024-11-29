@@ -16,6 +16,11 @@ Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 
+### testing 
+
+run below command
+### npm test
+
 ### Back End 
 implemented by Nodejs and Express js
  first clone the project for responsible repository
